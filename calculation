@@ -1,0 +1,170 @@
+#pragma warning(disable: 4996)
+#include <cstdio>
+#include <ctime>
+#include <cstdlib>
+#include <cstring>
+
+
+struct time { //구조체 정의
+	int ts;
+	int tf;
+};
+void Stage(int level) //스테이지 함수
+{
+	system("cls"); //위의 시스템 초기화
+	srand(time(NULL)); //매번 다른 난수값을 주기위한 함수
+	printf("[Stage %d. 정답을  %d 초 안에 입력하세요]\n\n", level, 11 - level); //레벨마다 시간초 감소 1스테이지 10초 ~ 5스테이지 6초
+
+	int a, b, op, ans;
+	int score = 0;
+	struct time t; //구조체 정의
+	struct time* p; //포인터 정의
+	p = &t; //포인터 정의
+	for (int i = 1; i < 11; i++) //10문제기 때문에 10까지 반복
+	{
+		a = 1 + (rand() % (7 + (3 * level))); // 1~10까지의 지정, 3*level은 단계마다 3의 숫자가 늘어남. 1레벨의 경우 10, 그 이후 13, 16... 범위로
+		b = 1 + (rand() % (7 + (3 * level)));
+		op = 1 + (rand() % 4);  // 1~4까지의 랜덤으로 스위치문 지정.
+		switch (op) //op를 받아 스위치문 지정 
+		{
+		case 1:
+			printf("[Q %d] %d + %d = ", i, a, b);
+			t.ts = time(NULL); //구조체에서 사용. time(null)사용하여 시간 0초부터 시작되게함.
+			scanf("%d", &ans);
+			rewind(stdin); //버퍼를 비움 fflush 사용해도 됨
+			t.tf = time(NULL); //구조체에서 사용. time(null)사용하여 입력받고 시간 0초부터 시작되게함.
+			if ((t.tf - t.ts) >= (11 - level))
+			{
+				printf("					시간초과!  %d초를 초과하셨습니다. 답은 %d입니다\n", p->tf - p->ts, a + b); //포인터 사용
+			}
+			else
+			{
+				if (ans == (a + b)) //a + b를 더한게 정답이랑 같을 때
+				{
+					printf("					정답입니다. %d초만에 푸셨습니다.\n", (*p).tf - (*p).ts); //포인터 사용
+					score += 10;
+				}
+				else
+				{
+					printf("					틀렸습니다. 답은 %d입니다\n", a + b);
+				}
+			}
+			break;
+		case 2:
+			while (a <= b) // a-b가 되었을때 b가 a보다 크면 음수로 변하기 때문에
+			{
+				a = 1 + (rand() % (7 + (3 * level)));
+				b = 1 + (rand() % (7 + (3 * level)));
+			}
+			printf("[Q %d] %d - %d = ", i, a, b);
+			t.ts = time(NULL);
+			scanf("%d", &ans);
+			rewind(stdin);
+			t.tf = time(NULL);
+			if ((t.tf - t.ts) >= (11 - level))
+			{
+				printf("					시간초과!  %d초를 초과하셨습니다. 답은 %d입니다\n", t.tf - t.ts, a - b); // 구조체 사용
+			}
+			else
+			{
+				if (ans == (a - b))
+				{
+					printf("					정답입니다. %d초만에 푸셨습니다.\n", t.tf - t.ts);
+					score += 10;
+				}
+				else
+				{
+					printf("					틀렸습니다. 답은 %d입니다\n", a - b);
+				}
+			}
+			break;
+		case 3:
+			printf("[Q %d] %d * %d = ", i, a, b);
+			t.ts = time(NULL);
+			scanf("%d", &ans);
+			rewind(stdin);
+			t.tf = time(NULL);
+			if ((t.tf - t.ts) >= (11 - level))
+			{
+				printf("					시간초과!  %d초를 초과하셨습니다. 답은 %d입니다.\n", t.tf - t.ts, a * b);
+			}
+			else
+			{
+				if (ans == (a * b))
+				{
+					printf("					정답입니다. %d초만에 푸셨습니다.\n", t.tf - t.ts);
+					score += 10;
+				}
+				else
+				{
+					printf("					틀렸습니다. 답은 %d입니다\n", a * b);
+				}
+			}
+			break;
+		case 4:
+			while ((a % b) != 0)
+			{
+				a = 1 + (rand() % (7 + (3 * level)));
+				b = 1 + (rand() % (7 + (3 * level)));
+			}
+			printf("[Q %d] %d / %d = ", i, a, b);
+			t.ts = time(NULL);
+			scanf("%d", &ans);
+			rewind(stdin);
+			t.tf = time(NULL);
+			if ((t.tf - t.ts) >= (11 - level))
+			{
+				printf("					시간초과!  %d초를 초과하셨습니다. 답은 %d입니다.\n", t.tf - t.ts, a / b);
+			}
+			else
+			{
+				if (ans == (a / b))
+				{
+					printf("					정답입니다. %d초만에 푸셨습니다.\n", t.tf - t.ts);
+					score += 10;
+				}
+				else
+				{
+					printf("					틀렸습니다. 답은 %d입니다\n", a / b);
+				}
+			}
+		}
+	}
+	printf("\n		총점: %d\n", score);
+	printf("엔터를 치시면 메뉴로 다시 돌아갑니다.");
+	getchar();
+	rewind(stdin);
+	return;
+}
+
+int main()
+{
+	int Menu_num = 0;
+	int inselect = 0;
+	while (Menu_num != 6)
+	{
+		printf("★☆★☆★☆사칙연산 계산 게임★☆★☆★☆\n\n");
+		printf("[ 1] Stage 1\n");
+		printf("[ 2] Stage 2\n");
+		printf("[ 3] Stage 3\n");
+		printf("[ 4] Stage 4\n");
+		printf("[ 5] Stage 5\n");
+		printf("[ 6] Exit\n\n");
+		printf(">> ");
+		inselect = scanf("%d", &Menu_num);
+		rewind(stdin);
+		while (inselect == 0 || Menu_num < 1 || Menu_num > 6) // 1~6사이의 숫자가 들어오지 않았을때
+		{
+			printf("잘못된 값을 입력하셨습니다.\n 다시 입력해 주십시오.\n   >>");
+			inselect = scanf("%d", &Menu_num);
+			rewind(stdin);
+		}
+		if (Menu_num > 0 && Menu_num < 6) //1부터 5사이의 숫자가 들어왔을때
+		{
+			Stage(Menu_num);
+			system("cls");
+		}
+	}
+	return 0;
+	system("cls");
+}
